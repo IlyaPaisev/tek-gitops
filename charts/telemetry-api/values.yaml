@@ -34,11 +34,22 @@ containerSecurityContext:
 livenessProbe:
   enabled: true
   path: /health
-  initialDelaySeconds: 5
-  periodSeconds: 10
+  initialDelaySeconds: 30
+  periodSeconds: 20
+  timeoutSeconds: 5
+  failureThreshold: 5
 
 readinessProbe:
   enabled: true
   path: /health
-  initialDelaySeconds: 3
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 6
+
+startupProbe:
+  enabled: true
+  path: /health
   periodSeconds: 5
+  timeoutSeconds: 5
+  failureThreshold: 12

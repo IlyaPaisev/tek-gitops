@@ -16,7 +16,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "telemetry-api.selectorLabels" . | nindent  8 }}
+        {{- include "telemetry-api.selectorLabels" . | nindent 8 }}
 
     spec:
       serviceAccountName: {{ include "telemetry-api.serviceAccountName" . }}
@@ -38,6 +38,16 @@ spec:
               containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
 
+          {{- if .Values.startupProbe.enabled }}
+          startupProbe:
+            httpGet:
+              path: {{ .Values.startupProbe.path }}
+              port: http
+            periodSeconds: {{ .Values.startupProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.startupProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.startupProbe.failureThreshold }}
+          {{- end }}
+
           {{- if .Values.livenessProbe.enabled }}
           livenessProbe:
             httpGet:
@@ -45,6 +55,8 @@ spec:
               port: http
             initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
           {{- end }}
 
           {{- if .Values.readinessProbe.enabled }}
@@ -54,6 +66,8 @@ spec:
               port: http
             initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
             periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+            timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+            failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
           {{- end }}
 
           resources:
